@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flask-backend
+spec:
+  replicas: 2
+
+  selector:
+    matchLabels:
+      app: flask-backend
+
+  template:
+    metadata:
+      labels:
+        app: flask-backend
+
+    spec:
+      serviceAccountName: backend-sa
+
+      containers:
+        - name: flask-backend
+
+          image: ACCOUNT_ID.dkr.ecr.us-east-1.amazonaws.com/flask-backend:v1
+
+          ports:
+            - containerPort: 5000
+
+          env:
+            - name: AWS_REGION
+              value: "us-east-1"
+
+            - name: DB_HOST
+              value: "database-1.ckhkeogg21ln.us-east-1.rds.amazonaws.com"
+
+            - name: SECRET_NAME
+              value: "rds!db-ac74596e-50e0-4120-8858-461f7beef0fe"
+
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "128Mi"
+
+            limits:
+              cpu: "500m"
+              memory: "512Mi"
